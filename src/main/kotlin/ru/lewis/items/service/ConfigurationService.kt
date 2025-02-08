@@ -20,10 +20,7 @@ import org.spongepowered.configurate.kotlin.extensions.set
 import org.spongepowered.configurate.kotlin.objectMapperFactory
 import org.spongepowered.configurate.yaml.NodeStyle
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader
-import ru.lewis.items.configuration.Configuration
-import ru.lewis.items.configuration.MainMenu
-import ru.lewis.items.configuration.MessagesConfiguration
-import ru.lewis.items.configuration.SecondMenu
+import ru.lewis.items.configuration.*
 import ru.lewis.items.configuration.serializer.*
 import ru.lewis.items.configuration.type.BossBarConfiguration
 import ru.lewis.items.configuration.type.MiniMessageComponent
@@ -64,11 +61,15 @@ class ConfigurationService @Inject constructor(
     lateinit var messages: MessagesConfiguration
         private set
 
+    lateinit var potionItems: PotionItems
+        private set
+
     private val rootDirectory = Path("")
     private val configFile = plugin.dataFolder.toPath().resolve("config.yml")
     private val mainFile = plugin.dataFolder.toPath().resolve("main_menu.yml")
     private val secondFile = plugin.dataFolder.toPath().resolve("second_menus.yml")
     private val messagesFile = plugin.dataFolder.toPath().resolve("messages.yml")
+    private val potionItemsFile = plugin.dataFolder.toPath().resolve("potion_items.yml")
     private val builder = createLoaderBuilder()
 
     override fun setup(consumer: TerminableConsumer) = doReload()
@@ -87,6 +88,9 @@ class ConfigurationService @Inject constructor(
         builder.path(messagesFile).build().let {
             it.save(it.createNode().set(messages))
         }
+        builder.path(potionItemsFile).build().let {
+            it.save(it.createNode().set(potionItems))
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -97,6 +101,7 @@ class ConfigurationService @Inject constructor(
     private fun doReload() {
         plugin.dataFolder.toPath().createDirectories()
         main = builder.path(mainFile).build().getAndSave<MainMenu>()
+        potionItems = builder.path(potionItemsFile).build().getAndSave<PotionItems>()
         second = builder.path(secondFile).build().getAndSave<SecondMenu>()
         config = builder.path(configFile).build().getAndSave<Configuration>()
         messages = builder.path(messagesFile).build().getAndSave<MessagesConfiguration>()

@@ -42,13 +42,41 @@ sealed interface UnicalItemType {
         }
     }
 
+    data class PotionItem(override val name: String, override val action: Action) : UnicalItemType
+
+    data object POTION : UnicalItemType {
+        override val name = "POTION"
+        override val action = Action.INVENTORY
+
+        private val potions = mutableMapOf<String, PotionItem>()
+
+        fun addPotion(name: String, action: Action) {
+            potions[name] = PotionItem(name, action)
+        }
+
+        fun getPotions(): Collection<PotionItem> = potions.values
+
+        fun getPotion(name: String): PotionItem? = potions[name]
+    }
+
     companion object {
-        private val VALUES = listOf(
-            FIX, GLOW, LEAVE, FEATHER, EXPERIENCE,
-            AURA.CRYSTAL_PROTECT, AURA.FALL_PROTECT
-        ).associateBy { it.name }
+        private val VALUES = mutableMapOf(
+            FIX.name to FIX,
+            GLOW.name to GLOW,
+            LEAVE.name to LEAVE,
+            FEATHER.name to FEATHER,
+            EXPERIENCE.name to EXPERIENCE,
+            AURA.CRYSTAL_PROTECT.name to AURA.CRYSTAL_PROTECT,
+            AURA.FALL_PROTECT.name to AURA.FALL_PROTECT
+        )
 
         fun valueOf(name: String): UnicalItemType =
-            VALUES[name] ?: throw IllegalArgumentException("No ru.lewis.items.configuration.type.UnicalItemType with name $name")
+            VALUES[name] ?: POTION.getPotion(name)
+            ?: throw IllegalArgumentException("No UnicalItemType with name $name")
+
+        fun register(type: UnicalItemType) {
+            VALUES[type.name] = type
+        }
     }
 }
+
