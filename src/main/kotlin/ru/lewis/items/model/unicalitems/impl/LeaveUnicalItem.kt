@@ -3,6 +3,7 @@ package ru.lewis.items.model.unicalitems.impl
 import jakarta.inject.Inject
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.plugin.Plugin
 import ru.lewis.items.configuration.type.UnicalItemType
@@ -27,7 +28,7 @@ class LeaveUnicalItem @Inject constructor(
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     fun onDamage(event: EntityDamageEvent) {
         if (event.cause == EntityDamageEvent.DamageCause.FALL) {
             event.isCancelled = true

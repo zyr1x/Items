@@ -7,12 +7,4 @@ import ru.lewis.items.model.unicalitems.type.ClickableItem
 
 abstract class AbstractClickedItem @Inject constructor(
     override val plugin: Plugin,
-) : AbstractUnicalItem(plugin), ClickableItem {
-
-    fun remove(player: Player, amount: Int) {
-        val inventory = player.inventory
-        val itemInMainHand = inventory.itemInMainHand
-        itemInMainHand.amount -= amount
-    }
-
-}
+) : AbstractUnicalItem(plugin), ClickableItem

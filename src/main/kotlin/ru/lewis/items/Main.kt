@@ -5,6 +5,7 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import org.bukkit.plugin.Plugin
 import org.slf4j.Logger
 import ru.lewis.items.model.SmartLifoCompositeTerminable
+import ru.lewis.items.model.listener.BreakItemListener
 import ru.lewis.items.model.listener.ClikedItemListener
 import ru.lewis.items.model.task.PotionItemChecker
 import ru.lewis.items.model.unicalitems.manager.UnicalItemManager
@@ -19,6 +20,7 @@ class Main @Inject constructor(
     private val commandService: CommandService,
     private val clikedItemListener: ClikedItemListener,
     private val potionItemChecker: PotionItemChecker,
+    private val breakItemListener: BreakItemListener,
     private val plugin: Plugin,
     logger: Logger,
     ) {
@@ -46,6 +48,7 @@ class Main @Inject constructor(
     }
 
     private fun registerListener() {
+        plugin.server.pluginManager.registerEvents(breakItemListener, plugin)
         plugin.server.pluginManager.registerEvents(clikedItemListener, plugin)
     }
 

@@ -3,6 +3,7 @@ package ru.lewis.items.model.unicalitems.impl
 import jakarta.inject.Inject
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.plugin.Plugin
 import ru.lewis.items.configuration.MessagesConfiguration
@@ -21,7 +22,7 @@ class FallProtectAura @Inject constructor(
         this.registerEvents()
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     fun onDamage(event: EntityDamageEvent) {
         val cause = event.cause
         if (cause != EntityDamageEvent.DamageCause.FALL) return

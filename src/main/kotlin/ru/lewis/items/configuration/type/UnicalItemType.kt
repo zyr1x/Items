@@ -6,6 +6,21 @@ sealed interface UnicalItemType {
     val name: String
     val action: Action
 
+    data object TREE_AXE : UnicalItemType {
+        override val name = "TREE_AXE"
+        override val action = Action.BREAK
+    }
+
+    data object FAKE_ENDER_PEARL : UnicalItemType {
+        override val name = "FAKE_ENDER_PEARL"
+        override val action = Action.CLICK
+    }
+
+    data object LEVITATION : UnicalItemType {
+        override val name = "LEVITATION"
+        override val action = Action.CLICK
+    }
+
     data object FIX : UnicalItemType {
         override val name = "FIX"
         override val action = Action.CLICK
@@ -67,7 +82,10 @@ sealed interface UnicalItemType {
             FEATHER.name to FEATHER,
             EXPERIENCE.name to EXPERIENCE,
             AURA.CRYSTAL_PROTECT.name to AURA.CRYSTAL_PROTECT,
-            AURA.FALL_PROTECT.name to AURA.FALL_PROTECT
+            AURA.FALL_PROTECT.name to AURA.FALL_PROTECT,
+            FAKE_ENDER_PEARL.name to FAKE_ENDER_PEARL,
+            LEVITATION.name to LEVITATION,
+            TREE_AXE.name to TREE_AXE
         )
 
         fun valueOf(name: String): UnicalItemType =

@@ -4,6 +4,8 @@ import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import me.lucko.helper.terminable.TerminableConsumer
 import me.lucko.helper.terminable.module.TerminableModule
+import org.bukkit.Material
+import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import ru.lewis.items.configuration.type.ItemTemplate
@@ -14,10 +16,7 @@ import ru.lewis.items.model.unicalitems.AbstractClickedItem
 import ru.lewis.items.model.unicalitems.AbstractSwapItem
 import ru.lewis.items.model.unicalitems.AbstractUnicalItem
 import ru.lewis.items.model.unicalitems.impl.*
-import ru.lewis.items.model.unicalitems.type.AuraItem
-import ru.lewis.items.model.unicalitems.type.ClickableItem
-import ru.lewis.items.model.unicalitems.type.SwapItem
-import ru.lewis.items.model.unicalitems.type.UnicalItem
+import ru.lewis.items.model.unicalitems.type.*
 import kotlin.jvm.optionals.getOrNull
 
 @Singleton
@@ -29,7 +28,10 @@ class UnicalItemManager @Inject constructor(
     private val experienceUnicalItem: ExperienceUnicalItem,
     private val crystalProtectAura: CrystalProtectAura,
     private val fallProtectAura: FallProtectAura,
-    private val potionUnicalItem: PotionUnicalItem
+    private val potionUnicalItem: PotionUnicalItem,
+    private val fakeEnderPearlItem: FakeEnderPearlItem,
+    private val levitationUnicalItem: LevitationUnicalItem,
+    private val axeBreakItem: AxeBreakItem
 ): TerminableModule {
 
     private val items: MutableMap<UnicalItemType, AbstractUnicalItem> = mutableMapOf()
@@ -44,6 +46,18 @@ class UnicalItemManager @Inject constructor(
         items[itemType]?.let {
             when (it) {
                 is ClickableItem -> (it.copy() as ClickableItem).click(player)
+            }
+        }
+    }
+
+    fun checkAndUse(block: Block, player: Player, action: Action) {
+        val item = player.inventory.itemInMainHand
+        if (item.type == Material.AIR) return
+        val itemType = ItemTemplate.getUnicalItemType(item) ?: return
+        if (itemType.action != action) return
+        items[itemType]?.let {
+            when (it) {
+                is BreakItem -> (it.copy() as BreakItem).onBreak(player, block)
             }
         }
     }
@@ -65,13 +79,16 @@ class UnicalItemManager @Inject constructor(
     private fun doReload() {
         items.clear()
         val list = mutableListOf(
+            axeBreakItem,
+            levitationUnicalItem,
             fixUnicalItem,
             glowUnicalItem,
             leaveUnicalItem,
             featherUnicalItem,
             experienceUnicalItem,
             crystalProtectAura,
-            fallProtectAura
+            fallProtectAura,
+            fakeEnderPearlItem
         )
         list.addAll(createPotionItems())
         list.forEach { item -> items[item.getType()] = item

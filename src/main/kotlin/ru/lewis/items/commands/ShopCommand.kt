@@ -1,5 +1,6 @@
 package ru.lewis.items.commands
 
+import dev.rollczi.litecommands.annotations.argument.Arg
 import dev.rollczi.litecommands.annotations.command.Command
 import dev.rollczi.litecommands.annotations.context.Context
 import dev.rollczi.litecommands.annotations.execute.Execute
@@ -17,10 +18,21 @@ class ShopCommand @Inject constructor(
     private val unicalItemManager: UnicalItemManager
 ){
     private val main get() = configurationService.main.template
+    private val pages get() = configurationService.second.pages
 
     @Execute
     fun execute(@Context player: Player) {
         menu.openMainMenu(player)
+    }
+
+    @Execute(name = "open")
+    fun openSpecificTab(@Context player: Player, @Arg tab: String) {
+        for (page in pages) {
+            if (page.key == tab) {
+                menu.openSecondMenu(player, page.value)
+                return
+            }
+        }
     }
 
     @Permission("items.reload")
