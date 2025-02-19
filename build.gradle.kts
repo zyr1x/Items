@@ -20,6 +20,8 @@ repositories {
     maven("https://repo.panda-lang.org/releases")
     // xz
     maven("https://jitpack.io")
+    // worldguard
+    maven("https://maven.enginehub.org/repo/")
 }
 
 dependencies {
@@ -32,6 +34,9 @@ dependencies {
     compileOnly(files("gradle/libs/PlayerPoints-3.2.7.jar"))
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
     compileOnly("me.lucko:helper:5.6.14")
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.9")
+    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.9")
+    compileOnly("com.sk89q.worldedit:worldedit-core:7.2.2-SNAPSHOT")
 
     // kotlin
     library(kotlin("stdlib"))

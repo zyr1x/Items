@@ -31,7 +31,8 @@ class UnicalItemManager @Inject constructor(
     private val potionUnicalItem: PotionUnicalItem,
     private val fakeEnderPearlItem: FakeEnderPearlItem,
     private val levitationUnicalItem: LevitationUnicalItem,
-    private val axeBreakItem: AxeBreakItem
+    private val axeBreakItem: AxeBreakItem,
+    private val trapItem: TrapItem
 ): TerminableModule {
 
     private val items: MutableMap<UnicalItemType, AbstractUnicalItem> = mutableMapOf()
@@ -88,7 +89,8 @@ class UnicalItemManager @Inject constructor(
             experienceUnicalItem,
             crystalProtectAura,
             fallProtectAura,
-            fakeEnderPearlItem
+            fakeEnderPearlItem,
+            trapItem
         )
         list.addAll(createPotionItems())
         list.forEach { item -> items[item.getType()] = item
